@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <h1>New Requests</h1>
+
+    {{ form_start(requestForm) }}
+        {{ form_row(requestForm.title) }}
+        {{ form_row(requestForm.content) }}
+        {{ form_row(requestForm.attachment) }}
+
+
+        <button type="submit" class="btn">Submit</button>
+    {{ form_end(requestForm) }}
+
+    <h1>List all requests</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>name</th>
+                <th>content</th>
+                <th>date</th>
+                <th>user</th>
+                <th>status</th>
+                {% if is_granted('ROLE_ADMIN') %} 
+                <th>change Status</th> 
+                <th>submit</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+                <tr>
+                    <td>{{request.title}}</td>
+                    <td>{{request.content}}</td>
+                    <td>{{request.date |date("m/d/Y") }}</td>
+                    <td>{{request.user.username }}</td>
+                    <td>{{request.status.name }}</td>
+                    {% if is_granted('ROLE_ADMIN') %} 
+                    <td>
+                        <select class="status" data-request={{request.id}} name="status"> 
+                            {% for statu in status %}
+                                <option value={{statu.id}}>{{statu.name}}<option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>doki</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <a href="{{ path('app_logout') }}">Logout</a>
+
+
+
+{% endblock %}
+
+
